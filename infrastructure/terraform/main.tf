@@ -6,7 +6,7 @@ terraform {
     }
     vkcs = {
       source  = "vk-cs/vkcs"
-      version = "~> 0.1.12"
+      version = "0.1.6"
     }
 
   }
@@ -92,11 +92,6 @@ resource "openstack_compute_instance_v2" "test-instance" {
 
 
 #########################
-## database
-
-data "vkcs_compute_flavor" "db" {
-  name = "Standard-2-8-50"
-}
 
 ##   Database
 
@@ -104,7 +99,7 @@ data "vkcs_compute_flavor" "db" {
 resource "vkcs_db_instance" "db-instance" {
   name        = "db-instance"
   keypair     = "${var.keypair_name}"
-  flavor_id   = data.vkcs_compute_flavor.db.id
+  flavor_id   = "bf714720-78da-4271-ab7d-0cf5e2613f14"
   size        = 8
   volume_type = "ceph-ssd"
   disk_autoexpand {
@@ -112,9 +107,13 @@ resource "vkcs_db_instance" "db-instance" {
     max_disk_size = 1000
   }
 
+  timeouts {
+    create = "1h30m"
+  }
+
   network {
     uuid        = "${openstack_networking_network_v2.generic.id}"
-    fixed_ip_v4 = "192.168.1.10"
+    fixed_ip_v4 = "192.168.1.25"
   }
 
   datastore {
