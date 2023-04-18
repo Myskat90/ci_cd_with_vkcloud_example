@@ -28,6 +28,15 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -149,3 +158,5 @@ db.sqlite3
 
 # kubeconf file
 k8s-cluster_kubeconfig.yaml
+/infrastructure/terraform-k8s/vkcs_provider.tf
+/infrastructure/terraform/vkcs_provider.tf

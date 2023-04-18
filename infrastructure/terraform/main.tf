@@ -1,15 +1,15 @@
 terraform {
-required_providers {
+  required_providers {
     openstack = {
       source  = "terraform-provider-openstack/openstack"
       version = "~> 1.46.0"
     }
     vkcs = {
       source  = "vk-cs/vkcs"
-      version = "0.1.6"
+      version = "~> 0.1.12"
     }
 
-}
+  }
 }
 #########################
 ##          Network
@@ -70,7 +70,7 @@ resource "openstack_compute_instance_v2" "test-instance" {
 
   security_groups = [
     "default",
-    "ssh+www"
+    "ssh-www"
   ]
 
   block_device {
@@ -81,7 +81,7 @@ resource "openstack_compute_instance_v2" "test-instance" {
     delete_on_termination = true
   }
 
-  metadata = {  
+  metadata = {
     env = "dev"
   }
 
@@ -92,13 +92,19 @@ resource "openstack_compute_instance_v2" "test-instance" {
 
 
 #########################
-##   Database 
+## database
+
+data "vkcs_compute_flavor" "db" {
+  name = "Standard-2-8-50"
+}
+
+##   Database
 
 # Cозадаем instance СУБД
 resource "vkcs_db_instance" "db-instance" {
   name        = "db-instance"
   keypair     = "${var.keypair_name}"
-  flavor_id   = "25ae869c-be29-4840-8e12-99e046d2dbd4"
+  flavor_id   = data.vkcs_compute_flavor.db.id
   size        = 8
   volume_type = "ceph-ssd"
   disk_autoexpand {
@@ -106,21 +112,21 @@ resource "vkcs_db_instance" "db-instance" {
     max_disk_size = 1000
   }
 
-network {
-    uuid = "${openstack_networking_network_v2.generic.id}"
+  network {
+    uuid        = "${openstack_networking_network_v2.generic.id}"
     fixed_ip_v4 = "192.168.1.10"
-}
+  }
 
-datastore {
+  datastore {
     version = 13
     type    = "postgresql"
-}
+  }
 }
 
 resource "vkcs_db_database" "app" {
-  name        = "appdb"
-  dbms_id     = "${vkcs_db_instance.db-instance.id}"
-  charset     = "utf8"
+  name    = "appdb"
+  dbms_id = "${vkcs_db_instance.db-instance.id}"
+  charset = "utf8"
 }
 
 # Генерим пароль для базы
@@ -131,11 +137,11 @@ resource "random_string" "resource_code" {
 }
 
 resource "vkcs_db_user" "app_user" {
-  name        = "app_user"
-  password    = "${random_string.resource_code.result}"
-  dbms_id     = "${vkcs_db_instance.db-instance.id}"
-  
-  databases   = ["${vkcs_db_database.app.name}"]
+  name     = "app_user"
+  password = "${random_string.resource_code.result}"
+  dbms_id  = "${vkcs_db_instance.db-instance.id}"
+
+  databases = ["${vkcs_db_database.app.name}"]
 }
 
 #########################
