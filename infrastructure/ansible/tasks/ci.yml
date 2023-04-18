@@ -42,9 +42,9 @@
 
 - name: Get binary runner
   uri:
-    url: https://github.com/actions/runner/releases/download/v2.295.0/actions-runner-linux-x64-2.295.0.tar.gz
+    url: https://github.com/actions/runner/releases/download/v2.303.0/actions-runner-linux-x64-2.303.0.tar.gz
     follow_redirects: all
-    dest: /tmp/actions-runner-linux-x64-2.295.0.tar.gz
+    dest: /tmp/actions-runner-linux-x64-2.303.0.tar.gz
 
 
 - name: Create a directory if it does not exist
@@ -55,7 +55,7 @@
 
 - name: Unarchive a file that needs to be downloaded
   become: no
-  shell: tar -xf /tmp/actions-runner-linux-x64-2.295.0.tar.gz
+  shell: tar -xf /tmp/actions-runner-linux-x64-2.303.0.tar.gz
   args:
     chdir: actions-runner
 
