@@ -7,10 +7,9 @@ on:
     branches: [ "main" ]
 
 env:
-  POSTGRES_DB: "appdb" 
+  POSTGRES_DB: "appdb"
   POSTGRES_USER: "app_user"
-  POSTGRES_PASSWORD: "app_password"
-  POSTGRES_HOST: "10.254.94.29"
+  POSTGRES_PASSWORD: ${{ secrets.PostgresPass }}
 
 jobs:
   build:
@@ -19,35 +18,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: docker/login-action@v2
-      with:
-        username: "windblow"
-        password: ${{ secrets.DOCKERHUBPASS }}
     - name: "Build docker container"
       run: |
-        docker build . -t windblow/django_example:$GITHUB_SHA 
-        docker push windblow/django_example:$GITHUB_SHA 
+        source .github/prod_env
+        echo "POSTGRES_DB=$POSTGRES_DB" >> .env
+        echo "POSTGRES_USER=$POSTGRES_USER" >> .env
+        echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
+        docker-compose build
     - name: "Execute tests in container"
       run: |
-        docker run windblow/django_example:$GITHUB_SHA python manage.py test
+        docker run ci_cd_with_vkcloud_example_web python manage.py test
   deploy:
     needs: [build]
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
-    - uses: azure/setup-helm@v3
-      with:
-        version: "3.10.1"
-    - name: "Deploy"
+    - name: Deploy to stage
       run: |
         source .github/prod_env
-        helm upgrade --install --atomic --values values.yaml django infrastructure/django-chart \
-         --set-string envConfigs.DB_PASSWORD="$POSTGRES_PASSWORD" \
-         --set-string envConfigs.DB_HOST="$POSTGRES_HOST" \
-         --set image.tag=$GITHUB_SHA \
-         --kube-apiserver=https://kubernetes.default \
-         --kube-insecure-skip-tls-verify=true \
-         --kube-token=${{ secrets.K8S_CI_TOKEN }} \
-         --namespace default
-      env:
-        POSTGRES_PASSWORD: ${{ secrets.POSTGRESPASS }}
+        echo "POSTGRES_DB=$POSTGRES_DB" >> .env
+        echo "POSTGRES_USER=$POSTGRES_USER" >> .env
+        echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
+        echo "POSTGRES_HOST=$POSTGRES_HOST" >> .env
+        docker-compose build
+        docker-compose up -d
