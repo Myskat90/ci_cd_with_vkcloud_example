@@ -27,7 +27,7 @@ jobs:
         docker-compose build
     - name: "Execute tests in container"
       run: |
-        docker run ci_cd_with_vkcloud_example_web python manage.py test
+        docker run ci_cd_with_vkcloud_example-web python manage.py test
   deploy:
     needs: [build]
     runs-on: self-hosted
