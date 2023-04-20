@@ -1,0 +1,8 @@
+- name: Install
+
+- name: Create sh file for renew letsencrypt cert
+  copy:
+    dest: "/usr/local/bin/renew.letsencrypt.sh"
+    content: |
+      sudo certbot renew
+    mode: 0755
