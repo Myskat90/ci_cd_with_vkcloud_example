@@ -64,7 +64,7 @@ ingress:
   enabled: "true"
   className: "nginx"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/issuer: "letsencrypt-prod"
     acme.cert-manager.io/http01-edit-in-place: "true"
   hosts:
   # ingress не умеет работать без host
