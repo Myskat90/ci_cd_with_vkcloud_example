@@ -7,7 +7,7 @@ terraform {
 }
 
 data "vkcs_kubernetes_clustertemplate" "ct" {
-  version = "1.24"
+  version = "1.24.9"
 }
 
 resource "vkcs_kubernetes_cluster" "k8s-cluster" {
@@ -25,15 +25,23 @@ resource "vkcs_kubernetes_cluster" "k8s-cluster" {
   availability_zone      = "MS1"
   ingress_floating_ip    = vkcs_networking_floatingip.ingressfip.address
   loadbalancer_subnet_id = vkcs_networking_subnet.k8s-subnetwork.id
+
+  labels = {
+    calico_ipv4pool   = "10.222.0.0/16"
+  }
 }
 
 resource "vkcs_kubernetes_node_group" "groups" {
   cluster_id = vkcs_kubernetes_cluster.k8s-cluster.id
-
-  node_count = 1
+  flavor_id = data.vkcs_compute_flavor.k8s-node-group-flavor.id
+  node_count = 2
   name       = "default"
-  max_nodes  = 5
-  min_nodes  = 1
+  max_nodes  = 4
+  min_nodes  = 2
+
+  timeouts {
+    create = "30m"
+  }
 }
 
 
@@ -52,7 +60,7 @@ data "vkcs_compute_flavor" "db" {
 ### database
 resource "vkcs_db_instance" "db-instance" {
   name        = "db-instance"
-  #keypair     = "${var.keypair_name}"
+  keypair     = var.keypair_name
   flavor_id   = data.vkcs_compute_flavor.db.id
   size        = 8
   volume_type = "ceph-ssd"
@@ -69,7 +77,7 @@ resource "vkcs_db_instance" "db-instance" {
   }
 
   datastore {
-    version = 13
+    version = 14
     type    = "postgresql"
   }
 }
