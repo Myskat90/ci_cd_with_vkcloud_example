@@ -10,7 +10,10 @@
   shell: helm upgrade --install ingress-nginx ingress-nginx \
           --repo https://kubernetes.github.io/ingress-nginx \
           --namespace ingress-nginx --create-namespace \
+          --set controller.config.use-proxy-protocol="true" \
+          --set controller.config.enable-real-ip="true" \
           --set 'controller.service.annotations.loadbalancer\.openstack\.org/proxy-protocol=true' \
+          --set controller.config.ssl-redirect="false" \
           --set controller.replicaCount=2
 
  # Cоздание loadbalancer в кластере, который создаст
