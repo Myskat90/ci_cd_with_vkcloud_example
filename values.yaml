@@ -71,7 +71,7 @@ ingress:
     - host: "vkcs.ap-msk.com"
       paths:
         - path: /
-          pathType: prefix
+          pathType: Exact
           backend:
             service:
               name: django
