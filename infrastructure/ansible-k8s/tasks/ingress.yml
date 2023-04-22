@@ -10,6 +10,7 @@
   shell: helm upgrade -i --force nginx-ingress-http nginx-stable/nginx-ingress \
           --create-namespace --namespace nginx-ingress \
           --set controller.service.create=false \
+          --set controller.replicaCount=2 \
           --set controller.config.entries.real-ip-header=proxy_protocol \
           --set controller.config.entries.set-real-ip-from=0.0.0.0/0 \
           --set-string controller.config.entries.proxy-protocol="True" 

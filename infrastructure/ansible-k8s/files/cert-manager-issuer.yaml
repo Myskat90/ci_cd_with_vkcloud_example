@@ -15,4 +15,9 @@ spec:
    solvers:
    - http01:
        ingress:
-         class:  nginx
+         ingressTemplate:
+           metadata:
+             labels:
+               app.kubernetes.io/instance: nginx-ingress-http
+               app.kubernetes.io/name: nginx-ingress
+         serviceType: ClusterIP

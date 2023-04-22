@@ -6,7 +6,7 @@ metadata:
   annotations:
     loadbalancer.openstack.org/proxy-protocol: "true"
 spec:
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   type: LoadBalancer
   ports:
   - port: 80
@@ -18,4 +18,5 @@ spec:
     protocol: TCP
     name: https
   selector:
-    app: nginx-ingress-http-nginx-ingress
+    app.kubernetes.io/instance: nginx-ingress-http
+    app.kubernetes.io/name: nginx-ingress

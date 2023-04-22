@@ -35,7 +35,7 @@ resource "vkcs_kubernetes_node_group" "groups" {
   cluster_id = vkcs_kubernetes_cluster.k8s-cluster.id
   flavor_id = data.vkcs_compute_flavor.k8s-node-group-flavor.id
   node_count = 2
-  name       = "default"
+  name       = "worker"
   max_nodes  = 4
   min_nodes  = 2
 
