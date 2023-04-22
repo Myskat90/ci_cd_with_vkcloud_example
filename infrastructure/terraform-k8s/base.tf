@@ -30,5 +30,5 @@ data "vkcs_compute_flavor" "k8s" {
 }
 
 data "vkcs_compute_flavor" "k8s-node-group-flavor" {
-  name = "Standard-4-8-100"
+  name = "Standard-4-8-80"
 }

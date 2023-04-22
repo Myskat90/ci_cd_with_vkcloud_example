@@ -7,7 +7,7 @@ terraform {
 }
 
 data "vkcs_kubernetes_clustertemplate" "ct" {
-  version = "1.24.9"
+  version = "1.24"
 }
 
 resource "vkcs_kubernetes_cluster" "k8s-cluster" {
