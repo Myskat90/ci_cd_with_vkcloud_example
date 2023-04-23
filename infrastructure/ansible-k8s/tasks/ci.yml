@@ -37,12 +37,24 @@
     src: cert-manager-issuer.yaml
     dest: /tmp/cert-manager-issuer.yaml
 
+#- name: Copy manifest of cert.yaml
+#  copy:
+#    src: cert.yaml
+#    dest: /tmp/cert.yaml
+#
+#- name: Copy manifest of ingress.yaml
+#  copy:
+#    src: ingress.yaml
+#    dest: /tmp/ingress.yaml
+
 - name: Add needed object
   environment:
     KUBECONFIG: ../k8s-cluster_kubeconfig.yaml
   shell: kubectl apply -f \
            /tmp/{{ item }}
-  with_items: 
+  with_items:
+#    - cert.yaml
+#    - ingress.yaml
     - service_account.yaml
     - cert-manager-issuer.yaml
     - runnerdeployment.yaml

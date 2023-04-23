@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: django
+  namespace: default
+  labels:
+    app.kubernetes.io/instance: django
+    app.kubernetes.io/name: django
+#  annotations:
+#    cert-manager.io/common-name: "vkcs.ap-msk.com"
+#    cert-manager.io/renew-before: "360h"
+#    cert-manager.io/issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - vkcs.ap-msk.com
+      secretName: vkcs-ap-msk-com-tls
+  rules:
+    - host: vkcs.ap-msk.com
+      http:
+        paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name: django
+                port:
+                  number: 80
