@@ -6,3 +6,6 @@
 
 - name: "Installing ingress"
   import_tasks: ingress.yml
+
+#- name: "Installing demo-boutique"
+#  import_tasks: ci-demo-boutique.yml

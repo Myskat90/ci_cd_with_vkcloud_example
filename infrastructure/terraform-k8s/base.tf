@@ -26,7 +26,7 @@ resource "vkcs_networking_router_interface" "k8s" {
 }
 
 data "vkcs_compute_flavor" "k8s" {
-  name = "Standard-2-4-50"
+  name = "Standard-4-8-80"
 }
 
 data "vkcs_compute_flavor" "k8s-node-group-flavor" {

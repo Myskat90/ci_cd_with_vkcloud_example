@@ -64,12 +64,13 @@ ingress:
   enabled: "true"
   className: "nginx"
   annotations:
-    cert-manager.io/common-name: "vkcs.ap-msk.com"
-    cert-manager.io/renew-before: "360h"
-    cert-manager.io/issuer: letsencrypt-prod
+    annotations:
+      cert-manager.io/common-name: "vkcs-k8s.ap-msk.com"
+      cert-manager.io/renew-before: "360h"
+      cert-manager.io/issuer: letsencrypt-prod
   hosts:
   # ingress не умеет работать без host
-    - host: "vkcs.ap-msk.com"
+    - host: "vkcs-k8s.ap-msk.com"
       paths:
         - path: /
           pathType: Exact
@@ -82,8 +83,8 @@ ingress:
   # при использовании http
   tls:
     - hosts:
-        - vkcs.ap-msk.com
-      secretName: vkcs-ap-msk-com-tls
+        - vkcs-k8s.ap-msk.com
+      secretName: vkcs-k8s-ap-msk-com-tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
