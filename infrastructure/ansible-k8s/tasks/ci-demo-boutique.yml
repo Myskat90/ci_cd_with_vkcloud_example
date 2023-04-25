@@ -18,6 +18,11 @@
     src: demo-boutique/kubernetes-manifests.yaml
     dest: /tmp/kubernetes-manifests.yaml
 
+- name: Add namespace demo-boutique
+  environment:
+    KUBECONFIG: ../k8s-cluster_kubeconfig.yaml
+  shell: kubectl create namespace demo-boutique --dry-run=client -o yaml | kubectl apply -f -
+
 - name: Add needed object
   environment:
     KUBECONFIG: ../k8s-cluster_kubeconfig.yaml
