@@ -64,12 +64,12 @@ ingress:
   enabled: "true"
   className: "nginx"
   annotations:
-    cert-manager.io/common-name: "vkcs-k8s.ap-msk.com"
+    cert-manager.io/common-name: "demo-django.ap-msk.com"
     cert-manager.io/renew-before: "360h"
     cert-manager.io/issuer: letsencrypt-prod
   hosts:
   # ingress не умеет работать без host
-    - host: "vkcs-k8s.ap-msk.com"
+    - host: "demo-django.ap-msk.com"
       paths:
         - path: /
           pathType: Exact
@@ -82,8 +82,8 @@ ingress:
   # при использовании http
   tls:
     - hosts:
-        - vkcs-k8s.ap-msk.com
-      secretName: vkcs-k8s-ap-msk-com-tls
+        - demo-django.ap-msk.com
+      secretName: demo-django-ap-msk-com-tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
