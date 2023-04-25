@@ -3,6 +3,11 @@
     src: demo-boutique/cert-manager-IssuerGodaddy.yaml
     dest: /tmp/cert-manager-IssuerGodaddy.yaml
 
+- name: Render godaddy secret
+  template:
+    src: godaddy-secret.yaml.j2
+    dest: /tmp/godaddy-boutique-secret.yaml
+
 - name: Copy manifest of ingress.yaml
   copy:
     src: demo-boutique/02-ingress.yaml
@@ -20,5 +25,6 @@
            /tmp/{{ item }}
   with_items:
     - cert-manager-IssuerGodaddy.yaml
+    - godaddy-boutique-secret.yaml
     - kubernetes-manifests.yaml
     - boutique-ingress.yaml
