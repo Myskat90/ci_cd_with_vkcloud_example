@@ -1,0 +1,35 @@
+- name: Copy manifest of cert-manager-IssuerGodaddy.yaml
+  copy:
+    src: demo-boutique/cert-manager-IssuerGodaddy.yaml
+    dest: /tmp/cert-manager-IssuerGodaddy.yaml
+
+- name: Render godaddy secret
+  template:
+    src: godaddy-secret.yaml.j2
+    dest: /tmp/godaddy-boutique-secret.yaml
+
+- name: Copy manifest of ingress.yaml
+  copy:
+    src: demo-boutique/02-ingress.yaml
+    dest: /tmp/boutique-ingress.yaml
+
+- name: Copy manifest of boutique manifests.yaml
+  copy:
+    src: demo-boutique/kubernetes-manifests.yaml
+    dest: /tmp/kubernetes-manifests.yaml
+
+- name: Add namespace demo-boutique
+  environment:
+    KUBECONFIG: ../k8s-cluster_kubeconfig.yaml
+  shell: kubectl create namespace demo-boutique --dry-run=client -o yaml | kubectl apply -f -
+
+- name: Add needed object
+  environment:
+    KUBECONFIG: ../k8s-cluster_kubeconfig.yaml
+  shell: kubectl apply -n demo-boutique -f \
+           /tmp/{{ item }}
+  with_items:
+    - cert-manager-IssuerGodaddy.yaml
+    - godaddy-boutique-secret.yaml
+    - kubernetes-manifests.yaml
+    - boutique-ingress.yaml

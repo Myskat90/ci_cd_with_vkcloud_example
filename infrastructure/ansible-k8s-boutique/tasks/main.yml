@@ -1,0 +1,5 @@
+---
+# tasks file for .
+
+- name: "Installing demo-boutique"
+  import_tasks: ci-demo-boutique.yml

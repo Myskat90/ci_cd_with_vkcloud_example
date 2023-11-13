@@ -10,8 +10,8 @@ echo ""
 echo "     [1;32m$(pwd)[0m"
 echo ""
 echo "запуск команды"
-echo ""
-echo "     [1;36m${1/github_authtoken=*/github_authtoken=<ваш токен>}"
+v2="${1/github_authtoken=*/github_authtoken=<ваш токен>}"
+echo "     [1;36m${v2/godaddy_authtoken=*/godaddy_authtoken=<ваш токен>}"
 echo "[0m"
 
 read

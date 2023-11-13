@@ -1,0 +1,26 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: boutique-ingress
+  annotations:
+    cert-manager.io/common-name: "boutique.ap-msk.com"
+    cert-manager.io/renew-before: "360h"
+    cert-manager.io/issuer: letsencrypt-prod
+  #  nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "boutique.ap-msk.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - boutique.ap-msk.com
+      secretName: boutique-ap-msk-com-tls
