@@ -47,7 +47,7 @@ jobs:
          --set image.tag=$GITHUB_SHA \
          --kube-apiserver=https://kubernetes.default \
          --kube-insecure-skip-tls-verify=true \
-         --namespace default
+         --namespace default \
          --kube-token=${{ secrets.K8S_CI_TOKEN }}
       env:
         POSTGRES_PASSWORD: ${{ secrets.POSTGRESPASS }}
