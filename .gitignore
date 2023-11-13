@@ -144,6 +144,7 @@ dmypy.json
 
 infrastructure/terraform/.terraform*
 infrastructure/terraform-k8s/.terraform*
+infrastructure/terraform-openstack/.terraform*
 terraform.tfstate
 inventory
 terraform/variables.tf
@@ -160,3 +161,5 @@ db.sqlite3
 infrastructure/k8s-cluster_kubeconfig.yaml
 /infrastructure/terraform-k8s/vkcs_provider.tf
 /infrastructure/terraform/vkcs_provider.tf
+/infrastructure/terraform-openstack/openstack_provider.tf
+/infrastructure/terraform-openstack/clouds.yaml
