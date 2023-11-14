@@ -26,11 +26,8 @@ jobs:
     - name: "Build docker container"
       run: |
         echo "building demo container - success"
-#        docker build . -t myskat90/django_example:$GITHUB_SHA
-#        docker push myskat90/django_example:$GITHUB_SHA
     - name: "Execute tests in container"
       run: |
-#        docker run myskat90/django_example:$GITHUB_SHA python manage.py test
         docker run myskat90/django_example:0f64730fd35fc5e190129e6c3cc840f4d29545dd python manage.py test
   deploy:
     needs: [build]
@@ -46,7 +43,6 @@ jobs:
         helm upgrade --install --atomic --values values.yaml django infrastructure/django-chart \
          --set-string envConfigs.DB_PASSWORD="$POSTGRES_PASSWORD" \
          --set-string envConfigs.DB_HOST="$POSTGRES_HOST" \
-#         --set image.tag=$GITHUB_SHA \
          --set image.tag=0f64730fd35fc5e190129e6c3cc840f4d29545dd \
          --kube-apiserver=https://kubernetes.default \
          --kube-insecure-skip-tls-verify=true \
