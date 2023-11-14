@@ -7,7 +7,7 @@ terraform {
 }
 
 data "vkcs_kubernetes_clustertemplate" "ct" {
-  version = "1.24"
+  version = "1.26"
 }
 
 resource "vkcs_kubernetes_cluster" "k8s-cluster" {
@@ -52,7 +52,7 @@ resource "vkcs_networking_floatingip" "ingressfip" {
 }
 
 ## database
-
+#
 data "vkcs_compute_flavor" "db" {
   name = "Standard-2-8-50"
 }
@@ -111,7 +111,7 @@ resource "vkcs_db_user" "app_user" {
 }
 
 #######################
-#  Output 
+#  Output
 
 output "database" {
   value = "db_password ${random_string.resource_code.result} ${vkcs_db_instance.db-instance.ip[0]}"
