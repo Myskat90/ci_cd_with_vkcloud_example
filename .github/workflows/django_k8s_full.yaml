@@ -1,0 +1,53 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main-1" ]
+  pull_request:
+    branches: [ "main-1" ]
+
+env:
+  POSTGRES_DB: "appdb"
+  POSTGRES_USER: "app_user"
+  POSTGRES_PASSWORD: "app_password"
+  POSTGRES_HOST: "10.254.94.29"
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: docker/login-action@v2
+      with:
+        username: "myskat90"
+        password: ${{ secrets.DOCKERHUBPASS }}
+    - name: "Build docker container"
+      run: |
+        docker build . -t myskat90/django_example:$GITHUB_SHA 
+        docker push myskat90/django_example:$GITHUB_SHA
+    - name: "Execute tests in container"
+      run: |
+        docker run myskat90/django_example:$GITHUB_SHA python manage.py test
+  deploy:
+    needs: [build]
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/setup-helm@v3
+      with:
+        version: "3.10.2"
+    - name: "Deploy"
+      run: |
+        source .github/prod_env
+        helm upgrade --install --atomic --values values.yaml django infrastructure/django-chart \
+         --set-string envConfigs.DB_PASSWORD="$POSTGRES_PASSWORD" \
+         --set-string envConfigs.DB_HOST="$POSTGRES_HOST" \
+         --set image.tag=$GITHUB_SHA \
+         --kube-apiserver=https://kubernetes.default \
+         --kube-insecure-skip-tls-verify=true \
+         --namespace default \
+         --kube-token=${{ secrets.K8S_CI_TOKEN }}
+      env:
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRESPASS }}
