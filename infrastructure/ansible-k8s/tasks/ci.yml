@@ -37,20 +37,20 @@
     src: service_account.yaml
     dest: /tmp/service_account.yaml
 
-- name: Copy manifest of godaddy-webhook.yaml
+- name: Copy manifest of regru-webhook.yaml
   copy:
-    src: godaddy-webhook.yaml
-    dest: /tmp/godaddy-webhook.yaml
+    src: regru-webhook.yaml
+    dest: /tmp/regru-webhook.yaml
 
-- name: Render godaddy secret
+- name: Render regru secret
   template:
-    src: godaddy-secret.yaml.j2
-    dest: /tmp/godaddy-secret.yaml
+    src: regru-secret.yaml.j2
+    dest: /tmp/regru-secret.yaml
 
-- name: Copy manifest of cert-manager-IssuerGodaddy.yaml
+- name: Copy manifest of ClusterIssuerRegru.yaml
   copy:
-    src: cert-manager-IssuerGodaddy.yaml
-    dest: /tmp/cert-manager-IssuerGodaddy.yaml
+    src: ClusterIssuerRegru.yaml
+    dest: /tmp/ClusterIssuerRegru.yaml
 
 
 - name: Add needed object
@@ -59,9 +59,9 @@
   shell: kubectl apply -f \
            /tmp/{{ item }}
   with_items:
-    - godaddy-webhook.yaml
-    - godaddy-secret.yaml
+    - regru-secret.yaml
+    - regru-webhook.yaml
     - service_account.yaml
     - runnerdeployment.yaml
-    - cert-manager-IssuerGodaddy.yaml
+    - ClusterIssuerRegru.yaml
 

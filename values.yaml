@@ -66,7 +66,7 @@ ingress:
   annotations:
     cert-manager.io/common-name: "demo-django.ap-msk.com"
     cert-manager.io/renew-before: "360h"
-    cert-manager.io/issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: regru-letsencrypt-prod
   hosts:
   # ingress не умеет работать без host
     - host: "demo-django.ap-msk.com"

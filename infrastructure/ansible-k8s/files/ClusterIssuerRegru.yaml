@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: regru-letsencrypt-prod
+spec:
+  acme:
+    email: myskat_90@mail.ru
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: regru-letsencrypt-prod
+    solvers:
+      - selector:
+          dnsZones:
+            - 'ap-msk.com'
+        dns01:
+          webhook:
+            config:
+              regruPasswordSecretRef:
+                name: regru-password
+                key: REGRU_PASSWORD
+            # groupName should be the same as `groupName.name` in `values.yaml` file.
+            groupName: acme.ap-msk.com
+            solverName: regru-dns
