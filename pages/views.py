@@ -7,4 +7,4 @@ from django.http import HttpResponse
 
 
 def homePageView(request):
-    return HttpResponse("Hello, World! Jet MeetUp")
+    return HttpResponse("Hello, World! MKB MeetUp 3!")
