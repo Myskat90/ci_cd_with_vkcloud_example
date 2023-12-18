@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ "main-1" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main-1" ]
+    branches: [ "main" ]
 
 env:
   POSTGRES_DB: "appdb"
@@ -43,7 +43,7 @@ jobs:
         helm upgrade --install --atomic --values values.yaml django infrastructure/django-chart \
          --set-string envConfigs.DB_PASSWORD="$POSTGRES_PASSWORD" \
          --set-string envConfigs.DB_HOST="$POSTGRES_HOST" \
-         --set image.tag=0f64730fd35fc5e190129e6c3cc840f4d29545dd \
+         --set image.tag=43c853ea329f8f0922d9473dae4d558bb2075f03 \
          --kube-apiserver=https://kubernetes.default \
          --kube-insecure-skip-tls-verify=true \
          --namespace default \
