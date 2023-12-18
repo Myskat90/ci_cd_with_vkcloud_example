@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ "main-1" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main-1" ]
+    branches: [ "main" ]
 
 env:
   POSTGRES_DB: "appdb"
