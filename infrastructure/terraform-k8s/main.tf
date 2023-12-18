@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     vkcs = {
-      source  = "vk-cs/vkcs"
+      source = "vk-cs/vkcs"
     }
   }
 }
@@ -54,7 +54,7 @@ resource "vkcs_networking_floatingip" "ingressfip" {
 ## database
 #
 data "vkcs_compute_flavor" "db" {
-  name = "Standard-2-8-50"
+  name = "STD2-2-8"
 }
 
 ### database
@@ -67,6 +67,9 @@ resource "vkcs_db_instance" "db-instance" {
   disk_autoexpand {
     autoexpand    = true
     max_disk_size = 1000
+  }
+  timeouts {
+    create = "30m"
   }
   depends_on = [
     vkcs_kubernetes_cluster.k8s-cluster
@@ -84,7 +87,7 @@ resource "vkcs_db_instance" "db-instance" {
 
 resource "vkcs_db_database" "app" {
   name       = "appdb"
-  dbms_id    = "${vkcs_db_instance.db-instance.id}"
+  dbms_id    = vkcs_db_instance.db-instance.id
   charset    = "utf8"
   depends_on = [
     vkcs_db_instance.db-instance
@@ -93,18 +96,17 @@ resource "vkcs_db_database" "app" {
 
 # Генерим пароль для базы
 resource "random_string" "resource_code" {
-  length  = 10
+  length  = 8
   special = false
   numeric = true
   upper   = false
 }
 
 resource "vkcs_db_user" "app_user" {
-  name     = "app_user"
-  password = "${random_string.resource_code.result}"
-  dbms_id  = "${vkcs_db_instance.db-instance.id}"
-
-  databases  = ["${vkcs_db_database.app.name}"]
+  name      = "app_user"
+  password  = random_string.resource_code.result
+  dbms_id   = vkcs_db_instance.db-instance.id
+  databases = [vkcs_db_database.app.name]
   depends_on = [
     vkcs_db_database.app
   ]

@@ -4,6 +4,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: regru-webhook-regru-cluster-issuer
+  namespace: cert-manager
   labels:
     app: regru-cluster-issuer
     chart: regru-cluster-issuer-1.1.0
