@@ -7,7 +7,7 @@ terraform {
 }
 
 data "vkcs_kubernetes_clustertemplate" "ct" {
-  version = "1.26"
+  version = "1.27"
 }
 
 resource "vkcs_kubernetes_cluster" "k8s-cluster" {
@@ -34,9 +34,9 @@ resource "vkcs_kubernetes_cluster" "k8s-cluster" {
 resource "vkcs_kubernetes_node_group" "groups" {
   cluster_id = vkcs_kubernetes_cluster.k8s-cluster.id
   flavor_id = data.vkcs_compute_flavor.k8s-node-group-flavor.id
-  node_count = 3
+  node_count = 2
   name       = "worker"
-  max_nodes  = 4
+  max_nodes  = 3
   min_nodes  = 2
 
   timeouts {
@@ -85,21 +85,18 @@ resource "vkcs_db_instance" "db-instance" {
   }
 }
 
+# Генерим пароль для базы
+resource "random_string" "resource_code" {
+  length  = 16
+  special = false
+  numeric = true
+  upper   = true
+}
+
 resource "vkcs_db_database" "app" {
   name       = "appdb"
   dbms_id    = vkcs_db_instance.db-instance.id
   charset    = "utf8"
-  depends_on = [
-    vkcs_db_instance.db-instance
-  ]
-}
-
-# Генерим пароль для базы
-resource "random_string" "resource_code" {
-  length  = 8
-  special = false
-  numeric = true
-  upper   = false
 }
 
 resource "vkcs_db_user" "app_user" {
@@ -107,9 +104,6 @@ resource "vkcs_db_user" "app_user" {
   password  = random_string.resource_code.result
   dbms_id   = vkcs_db_instance.db-instance.id
   databases = [vkcs_db_database.app.name]
-  depends_on = [
-    vkcs_db_database.app
-  ]
 }
 
 #######################
