@@ -27,13 +27,13 @@ resource "vkcs_kubernetes_cluster" "k8s-cluster" {
   loadbalancer_subnet_id = vkcs_networking_subnet.k8s-subnetwork.id
 
   labels = {
-    calico_ipv4pool   = "10.222.0.0/16"
+    calico_ipv4pool = "10.222.0.0/16"
   }
 }
 
 resource "vkcs_kubernetes_node_group" "groups" {
   cluster_id = vkcs_kubernetes_cluster.k8s-cluster.id
-  flavor_id = data.vkcs_compute_flavor.k8s-node-group-flavor.id
+  flavor_id  = data.vkcs_compute_flavor.k8s-node-group-flavor.id
   node_count = 2
   name       = "worker"
   max_nodes  = 3
@@ -83,6 +83,10 @@ resource "vkcs_db_instance" "db-instance" {
     version = 14
     type    = "postgresql"
   }
+  wal_volume {
+    size        = 4
+    volume_type = "ceph-ssd"
+  }
 }
 
 # Генерим пароль для базы
@@ -94,9 +98,9 @@ resource "random_string" "resource_code" {
 }
 
 resource "vkcs_db_database" "app" {
-  name       = "appdb"
-  dbms_id    = vkcs_db_instance.db-instance.id
-  charset    = "utf8"
+  name    = "appdb"
+  dbms_id = vkcs_db_instance.db-instance.id
+  charset = "utf8"
 }
 
 resource "vkcs_db_user" "app_user" {
@@ -109,9 +113,9 @@ resource "vkcs_db_user" "app_user" {
 #######################
 #  Output
 
-output "database" {
-  value = "db_password ${random_string.resource_code.result} ${vkcs_db_instance.db-instance.ip[0]}"
-}
+#output "database" {
+#  value = "db_password ${random_string.resource_code.result} ${vkcs_db_instance.db-instance.ip[0]}"
+#}
 
 resource "local_file" "prod_env" {
   content = templatefile("${path.module}/env.tpl",
